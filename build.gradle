@@ -1,0 +1,63 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'war'
+
+/* Project variables: */
+def projectName = "CepConcepts"
+def projectGroupId = "jary"
+def projectVersion = "1.0-SNAPSHOT"
+
+/* Gradle variables: */
+group = projectGroupId
+version = projectVersion
+
+def versions = [
+        commonsLangCollections: "3.0",
+        drools: "5.5.0.Final",
+        gmock: "0.8.2",
+        groovy: "1.8.6",
+        logback: "1.0.9",
+        junit: "4.8",
+        spring: "3.2.0.RELEASE",
+]
+
+dependencies {
+    groovy "org.codehaus.groovy:groovy-all:${versions.groovy}"
+
+    // Spring dependencies
+    compile "org.springframework:spring-core:${versions.spring}"
+    compile "org.springframework:spring-context:${versions.spring}"
+    compile "org.springframework:spring-web:${versions.spring}"
+    compile "org.springframework:spring-webmvc:${versions.spring}"
+
+    // drools dependencies
+    compile "org.drools:knowledge-api:${versions.drools}"
+    compile "org.drools:drools-core:${versions.drools}"
+    compile "org.drools:drools-compiler:${versions.drools}"
+    compile "com.sun.xml.bind:jaxb-xjc:2.2"
+    compile "commons-collections:commons-collections:${versions.commonsLangCollections}"
+
+    // logging
+    compile "ch.qos.logback:logback-classic:${versions.logback}"
+    compile "ch.qos.logback:logback-core:${versions.logback}"
+
+
+    // test dependencies
+    testCompile "junit:junit:${versions.junit}"
+    testCompile "org.gmock:gmock:${versions.gmock}"
+    testCompile("org.springframework:spring-test:${versions.spring}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+
+}
+test {
+    jvmArgs '-Xms512m', '-Xmx1024m', '-XX:MaxPermSize=256m'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
