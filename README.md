@@ -1,4 +1,4 @@
-CepConcepts
+CEP_skypeBot
 ===========
 
-Somewhere to work out some Fusion and CEP concepts
+SkypeBot for tracking code contribution to GitHub and CI status
