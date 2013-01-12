@@ -1,6 +1,6 @@
 package jary.rules.factory
 import groovy.util.logging.Slf4j
-import jary.rules.listeners.ActivationTrackerListener
+
 import jary.rules.listeners.DebugAgendaEventListener
 import jary.rules.listeners.DebugWorkingMemoryEventListener
 import jary.rules.listeners.RetractionListener
@@ -37,10 +37,6 @@ class RuleSessionFactory {
     @Autowired
     RetractionListener retractionListener
 
-    /** specialized listener to allow for tracking add/removes of a specific fact type */
-    @Autowired
-    ActivationTrackerListener activationTrackerListener
-
     /**
      * build out a knowledge base from our rule packages (from loader) and return a configured session
      * with listeners attached
@@ -72,9 +68,6 @@ class RuleSessionFactory {
         // add retraction listener & start on thread for concurrency
         session.addEventListener(retractionListener)
         taskExecutor.execute(retractionListener)
-
-        // add activation tracker listener
-        session.addEventListener(activationTrackerListener)
 
         return session
     }

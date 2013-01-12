@@ -2,7 +2,6 @@ package jary.rules
 import groovy.util.logging.Slf4j
 import jary.rules.exceptions.MissingEntryPointException
 import jary.rules.factory.RuleSessionFactory
-import jary.rules.listeners.ActivationTrackerListener
 import jary.rules.listeners.RetractionListener
 import jary.rules.loader.ClasspathRuleLoader
 import org.drools.runtime.StatefulKnowledgeSession
@@ -38,10 +37,6 @@ class SessionManager {
     /** specialized listener to handle dynamic retractions */
     @Autowired
     RetractionListener retractionListener
-
-    /** specialized listener to allow for tracking add/removes of a specific fact type */
-    @Autowired
-    ActivationTrackerListener activationTrackerListener
 
     /** session entry key for our main entry point */
     final static String MATCH_ENTRY = "matchInfo"
