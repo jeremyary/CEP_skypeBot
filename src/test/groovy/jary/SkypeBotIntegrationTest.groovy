@@ -1,19 +1,17 @@
 package jary
 
-import com.skype.ChatMessage
-import com.skype.ChatMessageAdapter
-import com.skype.Skype
-import com.skype.SkypeException
 import groovy.util.logging.Slf4j
 import jary.bot.BotListener
 import org.eclipse.egit.github.core.*
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.GistService
 import org.eclipse.egit.github.core.service.OAuthService
+import org.eclipse.egit.github.core.service.RepositoryService
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
@@ -36,6 +34,12 @@ class SkypeBotIntegrationTest {
     @Autowired
     ThreadPoolTaskExecutor executor
 
+    @Value('${auth.github.username}')
+    String githubUsername
+
+    @Value('${auth.github.password}')
+    String githubPassword
+
     @Before
     void setUp() {
     }
@@ -50,32 +54,37 @@ class SkypeBotIntegrationTest {
     }
 
     @Test
-    void "monitor for commands"() {
-
-        Skype.daemon = false
-        Skype.addChatMessageListener(new ChatMessageAdapter() {
-            public void chatMessageReceived(ChatMessage received) throws SkypeException {
-                if (received.type == ChatMessage.Type.SAID) {
-                    if (received.content.startsWith("yo bot!")) {
-                        if (received.content.contains("list repos for ")) {
-                            Integer length = received.content.length() - received.content.indexOf("for ") + 4
-                            String username = received.content[-length]
-                            log.debug("detected: ${username}")
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    @Test
     void "github commits PoC"() {
 
+        RepositoryService repositoryService = new RepositoryService()
+        repositoryService.client.setCredentials(githubUsername, githubPassword)
+
+//        List<Repository> repositories = repositoryService.getOrgRepositories("CassidianCommunications")
+//        Repository oasisRepo = repositories.find { it.name == "oasis" }
+
+        List<Repository> repositories = new RepositoryService().getRepositories("jeremyary")
+        Repository repository = repositories.find { it.name == "CEP_skypeBot" }
+
         final CommitService service = new CommitService()
-        List<RepositoryCommit> commits = service.getCommits(new RepositoryId("github", "hubot"))
-        commits.last().with {
-            log.debug("${it.sha[0..6]} ${it.commit.author.name} ${it.commit.author.date}")
+        service.client.setCredentials(githubUsername, githubPassword)
+
+        RepositoryCommit lastKnownCommit
+        List<RepositoryCommit> commits
+
+        while (true) {
+
+            RepositoryCommit lastCommit = (service.getCommits(repository)).last()
+            if (!lastKnownCommit) {
+                lastKnownCommit = lastCommit
+                log.debug("setting last commit - ${lastCommit.sha[0..6]} ${lastCommit.commit.author.name} ${lastCommit.commit.author.date}")
+            } else if (lastCommit.sha != lastKnownCommit.sha) {
+                log.debug("found a new commit")
+                lastKnownCommit = lastCommit
+                log.debug("${lastCommit.sha[0..6]} ${lastCommit.commit.author.name} ${lastCommit.commit.author.date}")
+            }
+            sleep(10000)
         }
+
     }
 
     @Test
