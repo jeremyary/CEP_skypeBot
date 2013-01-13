@@ -21,3 +21,5 @@ target
 *.swp
 auth.properties
 auth-test.properties
+dep.report
+atlassian-ide-plugin.xml
