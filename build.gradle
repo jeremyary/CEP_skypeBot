@@ -30,6 +30,7 @@ configurations.all {
 def versions = [
         commonsLangCollections: "3.0",
         drools: "5.5.0.Final",
+        github: "1.1.2",
         gmock: "0.8.2",
         groovy: "1.8.6",
         logback: "1.0.9",
@@ -56,6 +57,9 @@ dependencies {
 
     // skype API
     compile "com.github.taksan:skype-java-api:${versions.skypeApi}"
+
+    // mylyn github api
+    compile "org.eclipse.mylyn.github:org.eclipse.egit.github.core:${versions.github}"
 
     // logging
     compile "ch.qos.logback:logback-classic:${versions.logback}"

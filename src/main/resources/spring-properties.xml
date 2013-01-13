@@ -8,6 +8,8 @@
         <property name="locations">
             <list>
                 <value>drools.properties</value>
+                <value>bot.properties</value>
+                <value>auth.properties</value>
             </list>
         </property>
     </bean>

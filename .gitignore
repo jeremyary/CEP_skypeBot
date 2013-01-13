@@ -19,3 +19,5 @@ target
 .springBeans
 *.swo
 *.swp
+auth.properties
+auth-test.properties
