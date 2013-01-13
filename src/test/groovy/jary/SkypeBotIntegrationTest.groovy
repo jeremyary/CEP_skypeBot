@@ -73,10 +73,10 @@ class SkypeBotIntegrationTest {
 
         while (true) {
 
-            RepositoryCommit lastCommit = (service.getCommits(repository)).last()
+            RepositoryCommit lastCommit = (service.getCommits(repository)).first()
             if (!lastKnownCommit) {
                 lastKnownCommit = lastCommit
-                log.debug("setting last commit - ${lastCommit.sha[0..6]} ${lastCommit.commit.author.name} ${lastCommit.commit.author.date}")
+                log.debug("setting last commit - ${lastCommit.sha[0..6]} ${lastCommit.commit.author.name} ${lastCommit.commit.message}")
             } else if (lastCommit.sha != lastKnownCommit.sha) {
                 log.debug("found a new commit")
                 lastKnownCommit = lastCommit
