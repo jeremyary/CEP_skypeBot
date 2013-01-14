@@ -52,7 +52,7 @@ class TalkCommandHandler implements CommandHandler {
             String response = " hey ${name}, ${responses[0]}"
 
             if (isGroupMessage) {
-                received.sender.send(response)
+                groupChat.send(response)
             } else {
                 received.sender.send(response)
             }
