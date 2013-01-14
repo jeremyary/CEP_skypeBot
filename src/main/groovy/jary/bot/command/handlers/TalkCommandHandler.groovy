@@ -47,7 +47,7 @@ class TalkCommandHandler implements CommandHandler {
             List<String> responses = phrases.toList()
             Collections.shuffle(responses)
 
-            String name = received.content[(response.indexOf("insult") + 6)..(received.content.size()-1)]
+            String name = received.content[(received.content.indexOf("insult") + 6)..(received.content.size()-1)]
 
             String response = " hey ${name}, ${responses[0]}"
 
